@@ -126,6 +126,7 @@ class RDT:
             # How do we do this?
 
             # Check if ACK, then return
+
             if self.isACK(response):
                 print("Packet ACK'd")
                 return
