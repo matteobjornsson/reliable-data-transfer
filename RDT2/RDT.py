@@ -1,8 +1,7 @@
-import Network
+import Network 
 import argparse
 from time import sleep
 import hashlib
-
 
 class Packet:
     ## the number of bytes used to store packet length
@@ -108,14 +107,20 @@ class RDT:
     def isACK(self, ret_S):
         pass
     
+    #############
+    # TODO:
+    # 1. reciever sends back packet with "ACK" "NAK"
+    # 2. 
+    #############
     def rdt_2_1_send(self, msg_S):
+
         p = Packet(self.seq_num, msg_S)
         self.seq_num += 1
 
         # Wait for ack or nak
         while True:
 
-            response = self.network.udt_send(p.get_byte_S())
+             self.network.udt_send(p.get_byte_S())
 
             # Get recienver response....
             # How do we do this?
@@ -139,7 +144,12 @@ class RDT:
             # Check if corrupt, then resend
 
 
-        
+
+    #############
+    # TODO:
+    # 1. reciever sends back packet with "ACK" "NAK"
+    # 2. 
+    #############
     def rdt_2_1_receive(self):
         ret_S = None
         byte_S = self.network.udt_receive()
@@ -159,7 +169,7 @@ class RDT:
             p = Packet.from_byte_S(self.byte_buffer[0:length])
 
             #packet must have current seq number and not corrupt to pass
-            if (p.seq_num == seq_num && !p.corrupt(byte_S)):
+            if (p.seq_num == seq_num and not Packet.corrupt(byte_S)):
                 ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
                 #remove the packet bytes from the buffer
                 self.byte_buffer = self.byte_buffer[length:]
