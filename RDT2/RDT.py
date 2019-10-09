@@ -36,7 +36,11 @@ class Packet:
         checksum = hashlib.md5((length_S+seq_num_S+self.msg_S).encode('utf-8'))
         checksum_S = checksum.hexdigest()
         #compile into a string
-        print( length_S + seq_num_S + checksum_S + self.msg_S)
+        print("Length: " + length_S)
+        print("Seq_num_S: " + seq_num_S)
+        print("checksum_S: " + checksum_S )
+        print("self.msg_s: " + self.msg_S)
+        #print( length_S + seq_num_S + checksum_S + self.msg_S)
         return length_S + seq_num_S + checksum_S + self.msg_S
    
     
@@ -79,6 +83,69 @@ class RDT:
         #keep extracting packets - if reordered, could get more than one
         while True:
             #check if we have received enough bytes
+            print(ret_S)
+
+            if(len(self.byte_buffer) < Packet.length_S_length):
+                return ret_S #not enough bytes to read packet length
+
+            #extract length of packet
+            length = int(self.byte_buffer[:Packet.length_S_length])
+            if len(self.byte_buffer) < length:
+                return ret_S #not enough bytes to read the whole packet
+            #create packet from buffer content and add to return string
+            p = Packet.from_byte_S(self.byte_buffer[0:length])
+            ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
+            #remove the packet bytes from the buffer
+            self.byte_buffer = self.byte_buffer[length:]
+            #if this was the last packet, will return on the next iteration
+            
+    def isNAK(self, ret_S):
+        pass
+
+    def isACK(self, ret_S):
+        pass
+    
+    def rdt_2_1_send(self, msg_S):
+        p = Packet(self.seq_num, msg_S)
+        self.seq_num += 1
+
+        # Wait for ack or nak
+        while True:
+
+            response = self.network.udt_send(p.get_byte_S())
+
+            # Get recienver response....
+            # How do we do this?
+
+            # Check if ACK, then return
+            if self.isACK(response):
+                print("Packet ACK'd")
+                return
+            
+            if self.isNAK(response):
+                print("Packet NAK'd)
+                continue
+        
+            # Should the sender check for corruption???
+            #if Packet.corrupt(???)
+            #if response == "corrupt":
+            #    continue
+
+
+            # Check if NAK, then resend
+            # Check if corrupt, then resend
+
+
+        
+    def rdt_2_1_receive(self):
+
+        ret_S = None
+        byte_S = self.network.udt_receive()
+        self.byte_buffer += byte_S
+
+        #keep extracting packets - if reordered, could get more than one
+        while True:
+            #check if we have received enough bytes
             if(len(self.byte_buffer) < Packet.length_S_length):
                 return ret_S #not enough bytes to read packet length
             #extract length of packet
@@ -91,19 +158,7 @@ class RDT:
             #remove the packet bytes from the buffer
             self.byte_buffer = self.byte_buffer[length:]
             #if this was the last packet, will return on the next iteration
-            
     
-    def rdt_2_1_send(self, msg_S):
-        pass
-        
-    def rdt_2_1_receive(self):
-        pass
-    
-    def rdt_3_0_send(self, msg_S):
-        pass
-        
-    def rdt_3_0_receive(self):
-        pass
         
 
 if __name__ == '__main__':

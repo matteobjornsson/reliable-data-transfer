@@ -95,19 +95,20 @@ class RDT:
             
     
     def rdt_2_1_send(self, msg_S):
-"""         ret_S = None
-        byte_S = self.network.udt_receive()
-        self.byte_buffer += byte_S
-        #keep extracting packets - if reordered, could get more than one
-        while True:
-            #check if we have received enough bytes
-            if(len(self.byte_buffer) < Packet.length_S_length):
-                return ret_S #not enough bytes to read packet length
-            #extract length of packet
-            length = int(self.byte_buffer[:Packet.length_S_length])
-            if len(self.byte_buffer) < length:
-                return ret_S #not enough bytes to read the whole packet """
+# """         ret_S = None
+#         byte_S = self.network.udt_receive()
+#         self.byte_buffer += byte_S
+#         #keep extracting packets - if reordered, could get more than one
+#         while True:
+#             #check if we have received enough bytes
+#             if(len(self.byte_buffer) < Packet.length_S_length):
+#                 return ret_S #not enough bytes to read packet length
+#             #extract length of packet
+#             length = int(self.byte_buffer[:Packet.length_S_length])
+#             if len(self.byte_buffer) < length:
+#                 return ret_S #not enough bytes to read the whole packet """
         pass
+
         
     def rdt_2_1_receive(self):
         pass
