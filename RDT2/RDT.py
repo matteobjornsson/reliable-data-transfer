@@ -120,7 +120,7 @@ class RDT:
         # Wait for ack or nak
         while True:
 
-             self.network.udt_send(p.get_byte_S())
+            self.network.udt_send(p.get_byte_S())
 
             # Get recienver response....
             # How do we do this?
@@ -132,7 +132,7 @@ class RDT:
                 return
             
             if self.isNAK(response):
-                print("Packet NAK'd)
+                print("Packet NAK'd")
                 continue
         
             # Should the sender check for corruption???
@@ -171,11 +171,27 @@ class RDT:
 
             #packet must have current seq number and not corrupt to pass
             if (p.seq_num == seq_num and not Packet.corrupt(byte_S)):
+                #deliver data: 
+
                 ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
                 #remove the packet bytes from the buffer
                 self.byte_buffer = self.byte_buffer[length:]
-                #if this was the last packet, will return on the next iteration
-            else: 
+                
+                #Send ACK Packet
+
+                #increment sequence RDT sequence number
+                
+            elif (Packet.corrupt(byte_S)):
+                #Send NACK Packet
+                pass
+
+            elif (True):#not corrupt but wrong sequence number
+                #Send Nack Packet
+                pass
+
+            elif (True): #
+                pass
+
 
 
 
