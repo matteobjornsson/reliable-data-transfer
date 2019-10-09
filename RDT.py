@@ -10,7 +10,8 @@ class Packet:
     length_S_length = 10
     ## length of md5 checksum in hex
     checksum_length = 32 
-        
+    
+    ## initialize each packet with a sequence number and message    
     def __init__(self, seq_num, msg_S):
         self.seq_num = seq_num
         self.msg_S = msg_S
@@ -23,17 +24,19 @@ class Packet:
         seq_num = int(byte_S[Packet.length_S_length : Packet.length_S_length+Packet.seq_num_S_length])
         msg_S = byte_S[Packet.length_S_length+Packet.seq_num_S_length+Packet.checksum_length :]
         return self(seq_num, msg_S)
-        
+        seq_num_S_length
         
     def get_byte_S(self):
         #convert sequence number of a byte field of seq_num_S_length bytes
         seq_num_S = str(self.seq_num).zfill(self.seq_num_S_length)
+        print (seq_num_S)
         #convert length to a byte field of length_S_length bytes
         length_S = str(self.length_S_length + len(seq_num_S) + self.checksum_length + len(self.msg_S)).zfill(self.length_S_length)
         #compute the checksum
         checksum = hashlib.md5((length_S+seq_num_S+self.msg_S).encode('utf-8'))
         checksum_S = checksum.hexdigest()
         #compile into a string
+        print( length_S + seq_num_S + checksum_S + self.msg_S)
         return length_S + seq_num_S + checksum_S + self.msg_S
    
     
