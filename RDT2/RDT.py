@@ -23,7 +23,7 @@ class Packet:
         seq_num = int(byte_S[Packet.length_S_length : Packet.length_S_length+Packet.seq_num_S_length])
         msg_S = byte_S[Packet.length_S_length+Packet.seq_num_S_length+Packet.checksum_length :]
         return self(seq_num, msg_S)
-        seq_num_S_length
+
         
     def get_byte_S(self):
         #convert sequence number of a byte field of seq_num_S_length bytes
@@ -85,7 +85,6 @@ class RDT:
             print(ret_S)
 
             if(len(self.byte_buffer) < Packet.length_S_length):
-                print("exit 1")
                 return ret_S #not enough bytes to read packet length
 
             #extract length of packet
@@ -115,36 +114,31 @@ class RDT:
     def rdt_2_1_send(self, msg_S):
 
         p = Packet(self.seq_num, msg_S)
-        self.seq_num += 1
 
         # Wait for ack or nak
         while True:
 
             self.network.udt_send(p.get_byte_S())
 
+
             # Get recienver response....
             # How do we do this?
+            byte_S = self.network.udt_receive()
+            if (Packet.corrupt(byte_S)):
+                continue
 
             # Check if ACK, then return
 
-            if self.isACK(response):
+            elif self.isACK(response):
                 print("Packet ACK'd")
-                return
+                return 
             
-            if self.isNAK(response):
+            else self.isNAK(response):
                 print("Packet NAK'd")
                 continue
         
-            # Should the sender check for corruption???
-            #if Packet.corrupt(???)
-            #if response == "corrupt":
-            #    continue
-
-
-            # Check if NAK, then resend
-            # Check if corrupt, then resend
-
-
+        #Increment sequence when ACK received
+        seq_num = (seq_num + 1) % 2
 
     #############
     # TODO:
@@ -169,34 +163,32 @@ class RDT:
             #create packet from buffer content and add to return string
             p = Packet.from_byte_S(self.byte_buffer[0:length])
 
-            #packet must have current seq number and not corrupt to pass
-            if (p.seq_num == seq_num and not Packet.corrupt(byte_S)):
-                #deliver data: 
+            if (Packet.corrupt(byte_S)):
+                #Send NACK
+                nack = Packet(self.seq_num, 0)
+                self.network.udt_send(nack.get_byte_S())
 
+            # not corrupt, expected sequence number
+            elif (p.seq_num == self.seq_num):
+                
+                #deliver data: 
                 ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
                 #remove the packet bytes from the buffer
                 self.byte_buffer = self.byte_buffer[length:]
+
+                #send ACK
+                ack = Packet(self.seq_num, 1)
+                self.network.udt_send(ack.get_byte_S())
+
+                #increment sequence
+                seq_num = (seq_num + 1) % 2
                 
-                #Send ACK Packet
 
-                #increment sequence RDT sequence number
-                
-            elif (Packet.corrupt(byte_S)):
-                #Send NACK Packet
-                pass
-
-            elif (True):#not corrupt but wrong sequence number
-                #Send Nack Packet
-                pass
-
-            elif (True): #
-                pass
-
-
-
-
-            
-        print("********************************************receive exit")
+            # not corrupt but old sequence
+            elif (p.seq_num != self.seq_num):
+                #send ACK
+                ack = Packet(self.seq_num, 1)
+                self.network.udt_send(ack.get_byte_S())
     
         
 
