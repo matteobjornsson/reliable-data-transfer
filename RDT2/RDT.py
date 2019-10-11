@@ -121,18 +121,15 @@ class RDT:
             # How do we do this?
             response = self.rdt_1_0_receive()
 
-            if response == "Corrupt":
-                continue
-             
             if (response == "corrupt" or "NAK")):
                 continue
 
             # Check if ACK, then return
-
             elif (response == "ACK"):
+
                 #Increment sequence when ACK received
                 seq_num = (seq_num + 1) % 2
-                return 
+                break
 
 
     #############
