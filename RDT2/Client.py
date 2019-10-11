@@ -33,7 +33,7 @@ if __name__ == '__main__':
                 else:
                     continue
         time_of_last_data = time.time()
-        
+        print("client rdt seq number: " + str(rdt.seq_num))
         #print the result
         if msg_S:
             print('to: '+msg_S+'\n')
