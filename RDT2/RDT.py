@@ -96,6 +96,8 @@ class RDT:
             #create packet from buffer content and add to return string
             p = Packet.from_byte_S(self.byte_buffer[0:length])
             ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
+            if (Packet.corrupt(byte_S)):
+                ret_S = "corrupt"
             #remove the packet bytes from the buffer
             self.byte_buffer = self.byte_buffer[length:]
             #if this was the last packet, will return on the next iteration
@@ -122,21 +124,16 @@ class RDT:
             if response == "Corrupt":
                 continue
              
-            if (Packet.corrupt(byte_S)):
+            if (response == "corrupt" or "NAK")):
                 continue
 
             # Check if ACK, then return
 
-            elif self.isACK(response):
-                print("Packet ACK'd")
+            elif (response == "ACK"):
+                #Increment sequence when ACK received
+                seq_num = (seq_num + 1) % 2
                 return 
-            
-            else self.isNAK(response):
-                print("Packet NAK'd")
-                continue
-        
-        #Increment sequence when ACK received
-        seq_num = (seq_num + 1) % 2
+
 
     #############
     # TODO:
