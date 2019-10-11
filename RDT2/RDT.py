@@ -95,6 +95,8 @@ class RDT:
             #create packet from buffer content and add to return string
             p = Packet.from_byte_S(self.byte_buffer[0:length])
             ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
+            if (Packet.corrupt(byte_S)):
+                ret_S = "corrupt"
             #remove the packet bytes from the buffer
             self.byte_buffer = self.byte_buffer[length:]
             #if this was the last packet, will return on the next iteration
@@ -125,21 +127,16 @@ class RDT:
             # How do we do this?
             response = self.rdt_1_0_receive()
              
-            if (Packet.corrupt(byte_S)):
+            if (response == "corrupt" or "NAK")):
                 continue
 
             # Check if ACK, then return
 
-            elif self.isACK(response):
-                print("Packet ACK'd")
+            elif (response == "ACK"):
+                #Increment sequence when ACK received
+                seq_num = (seq_num + 1) % 2
                 return 
-            
-            else self.isNAK(response):
-                print("Packet NAK'd")
-                continue
-        
-        #Increment sequence when ACK received
-        seq_num = (seq_num + 1) % 2
+
 
     #############
     # TODO:
@@ -168,7 +165,7 @@ class RDT:
                 #reset buffer to exit while loop
                 self.byte_buffer = self.byte_buffer[length:]
                 #Send NACK
-                nack = Packet(self.seq_num, 0)
+                nack = Packet(self.seq_num, "NAK")
                 self.network.udt_send(nack.get_byte_S())
 
             # not corrupt, expected sequence number
@@ -180,7 +177,7 @@ class RDT:
                 self.byte_buffer = self.byte_buffer[length:]
 
                 #send ACK
-                ack = Packet(self.seq_num, 1)
+                ack = Packet(self.seq_num, "ACK")
                 self.network.udt_send(ack.get_byte_S())
 
                 #increment sequence
@@ -192,7 +189,7 @@ class RDT:
                 #reset buffer to exit while loop
                 self.byte_buffer = self.byte_buffer[length:]
                 #send ACK
-                ack = Packet(self.seq_num, 1)
+                ack = Packet(self.seq_num, "ACK")
                 self.network.udt_send(ack.get_byte_S())
     
         
