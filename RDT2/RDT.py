@@ -140,31 +140,77 @@ class RDT:
         p = Packet(self.seq_num, msg_S)
         print("***" + msg_S + " sent and waiting for ACK ***")
 
+
         # Wait for ack or nak
         while True:
 
             self.network.udt_send(p.get_byte_S())
+
+            responsePacket = None
+            #ret_S = None
+            byte_S = self.network.udt_receive()
+            #self.byte_buffer += byte_S
+            self.byte_buffer = ""
+
+            #keep extracting packets - if reordered, could get more than one
+            while True:
+                #check if we have received enough bytes
+                if(len(self.byte_buffer) < Packet.length_S_length):
+                    #return ret_S #not enough bytes to read packet length
+                    break
+                #extract length of packet
+                length = int(self.byte_buffer[:Packet.length_S_length])
+                if len(self.byte_buffer) < length:
+                    #return ret_S #not enough bytes to read the whole packet
+                    break
+                #create packet from buffer content and add to return string
+                try:
+                    responsePacket = Packet.from_byte_S(self.byte_buffer[0:length])
+                except:
+                    break
+                #print("*************p = " + p)
+                #ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
+                #print("*************ret_S = "+ret_S)
+                #remove the packet bytes from the buffer
+                self.byte_buffer = self.byte_buffer[length:]
+
+            if responsePacket is None:
+                continue
+
+            # Send is good, return
+            if responsePacket.isACK():
+                return
+
+            if responsePacket.isNAK():
+                continue
+
+
+
+
+
             #print("i'm looping here")
 
             # Get recienver response....
             # How do we do this?
 
-            while True: 
-                response = self.rdt_1_0_receive()
-                if (not response == None):
-                    #print(str(response) + "!!!")
-                    break
+            # while True: 
+            #     response = self.rdt_1_0_receive()
+            #     p = Packet.from_byte_S(response)
 
-            if (response == "corrupt" or "NAK"):
-                continue
+            #     if (not response == None):
+            #         #print(str(response) + "!!!")
+            #         break
 
-            # Check if ACK, then return
-            elif (response == "ACK"):
-                print("ACK RECEIVED")
+            # if (response == "corrupt" or "NAK"):
+            #     continue
 
-                #Increment sequence when ACK received
-                self.seq_num = (self.seq_num + 1) % 2
-                break
+            # # Check if ACK, then return
+            # elif (response == "ACK"):
+            #     print("ACK RECEIVED")
+
+            #     #Increment sequence when ACK received
+            #     self.seq_num = (self.seq_num + 1) % 2
+            #     break
 
 
     #############
