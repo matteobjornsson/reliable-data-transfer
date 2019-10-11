@@ -44,12 +44,12 @@ class Packet:
         checksum = hashlib.md5((length_S + seq_num_S + str(self.ACK) + str(self.NAK) + self.msg_S).encode('utf-8'))
         checksum_S = checksum.hexdigest()
         #compile into a string
-        print("Length: " + length_S)
-        print("Seq_num_S: " + seq_num_S)
-        print("checksum_S: " + checksum_S)
-        print("self.ACK: " + str(self.ACK))
-        print("self.isNAK: " + str(self.NAK))
-        print("self.msg_s: " + self.msg_S)
+        #print("Length: " + length_S)
+        #print("Seq_num_S: " + seq_num_S)
+        #print("checksum_S: " + checksum_S)
+        #print("self.ACK: " + str(self.ACK))
+        #print("self.isNAK: " + str(self.NAK))
+        #print("self.msg_s: " + self.msg_S)
         #print( length_S + seq_num_S + checksum_S + self.msg_S)
         return length_S + seq_num_S + checksum_S + str(self.ACK) + str(self.NAK) + self.msg_S
    
@@ -63,12 +63,12 @@ class Packet:
         ack_nak_S = byte_S[Packet.seq_num_S_length + Packet.seq_num_S_length + Packet.checksum_length: Packet.seq_num_S_length + Packet.length_S_length + Packet.checksum_length + Packet.ACK_NAK_length]
         msg_S = byte_S[Packet.seq_num_S_length + Packet.seq_num_S_length + Packet.checksum_length + Packet.ACK_NAK_length :]
 
-        print(length_S)
-        print(seq_num_S)
-        print(checksum_S)
-        print(ack_nak_S)
-        print(msg_S)
-        print(str(length_S + seq_num_S + ack_nak_S + msg_S))
+        #print(length_S)
+        #print(seq_num_S)
+        #print(checksum_S)
+        #print(ack_nak_S)
+        #print(msg_S)
+        #print(str(length_S + seq_num_S + ack_nak_S + msg_S))
         
         #compute the checksum locally
         checksum = hashlib.md5(str(length_S + seq_num_S + ack_nak_S + msg_S).encode('utf-8'))
