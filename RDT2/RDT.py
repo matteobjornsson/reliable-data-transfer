@@ -37,7 +37,7 @@ class Packet:
         #compile into a string
         print("Length: " + length_S)
         print("Seq_num_S: " + seq_num_S)
-        print("checksum_S: " + checksum_S )
+        print("checksum_S: " + checksum_S)
         print("self.msg_s: " + self.msg_S)
         #print( length_S + seq_num_S + checksum_S + self.msg_S)
         return length_S + seq_num_S + checksum_S + self.msg_S
@@ -92,6 +92,7 @@ class RDT:
             if len(self.byte_buffer) < length:
                 print("exit2")
                 return ret_S #not enough bytes to read the whole packet
+
             #create packet from buffer content and add to return string
             p = Packet.from_byte_S(self.byte_buffer[0:length])
             ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
@@ -100,12 +101,6 @@ class RDT:
             #if this was the last packet, will return on the next iteration
         print("********************************************receive exit")
             
-    def isNAK(self, ret_S):
-        pass
-
-    def isACK(self, ret_S):
-        pass
-    
     #############
     # TODO:
     # 1. reciever sends back packet with "ACK" "NAK"
@@ -120,10 +115,12 @@ class RDT:
 
             self.network.udt_send(p.get_byte_S())
 
-
             # Get recienver response....
             # How do we do this?
             response = self.rdt_1_0_receive()
+
+            if response == "Corrupt":
+                continue
              
             if (Packet.corrupt(byte_S)):
                 continue
@@ -147,6 +144,7 @@ class RDT:
     # 2. 
     #############
     def rdt_2_1_receive(self):
+
         ret_S = None
         byte_S = self.network.udt_receive()
         self.byte_buffer += byte_S
@@ -168,7 +166,7 @@ class RDT:
                 #reset buffer to exit while loop
                 self.byte_buffer = self.byte_buffer[length:]
                 #Send NACK
-                nack = Packet(self.seq_num, 0)
+                nack = Packet(self.seq_num, "NAK")
                 self.network.udt_send(nack.get_byte_S())
 
             # not corrupt, expected sequence number
@@ -180,7 +178,7 @@ class RDT:
                 self.byte_buffer = self.byte_buffer[length:]
 
                 #send ACK
-                ack = Packet(self.seq_num, 1)
+                ack = Packet(self.seq_num, "ACK")
                 self.network.udt_send(ack.get_byte_S())
 
                 #increment sequence
@@ -192,7 +190,7 @@ class RDT:
                 #reset buffer to exit while loop
                 self.byte_buffer = self.byte_buffer[length:]
                 #send ACK
-                ack = Packet(self.seq_num, 1)
+                ack = Packet(self.seq_num, "ACK")
                 self.network.udt_send(ack.get_byte_S())
     
         
