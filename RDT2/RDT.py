@@ -30,7 +30,7 @@ class Packet:
         ack = byte_S[Packet.seq_num_S_length + Packet.seq_num_S_length + Packet.checksum_length: Packet.seq_num_S_length + Packet.length_S_length + Packet.checksum_length + Packet.ACK_NAK_length - 1]
         nak = byte_S[Packet.seq_num_S_length + Packet.seq_num_S_length + Packet.checksum_length + Packet.ACK_NAK_length - 1: Packet.seq_num_S_length + Packet.length_S_length + Packet.checksum_length + Packet.ACK_NAK_length]
         msg_S = byte_S[Packet.length_S_length + Packet.seq_num_S_length + Packet.checksum_length + Packet.ACK_NAK_length:]
-        return self(seq_num, msg_S, ack, nak)
+        return self(seq_num, msg_S, int(ack), int(nak))
 
         
     def get_byte_S(self) -> str:
@@ -94,7 +94,9 @@ class Packet:
         #print("checksum_S: " + checksum_S)
         print("Seq_num_S: " + str(self.seq_num))
         print("self.ACK: " + str(self.ACK))
-        print("self.isNAK: " + str(self.NAK))
+        print("self.isACK(): " + str(self.isACK()))
+        print("self.NAK: " + str(self.NAK))
+        print("self.isNAK(): " + str(self.isNAK()))
         print("self.msg_s: " + self.msg_S)
 
 
@@ -152,31 +154,37 @@ class RDT:
 
         p = Packet(self.seq_num, msg_S)
         #self.seq_num += 1
-        print("*** " + msg_S + " sent and waiting for ACK ***")
+        #print("*** " + msg_S + " sent and waiting for ACK ***")
 
 
         # Wait for ack or nak
-        print("Entering while")
+        #print("Entering while")
         while True:
 
             self.network.udt_send(p.get_byte_S())
             self.byte_buffer = ''
 
             while len(self.byte_buffer) == 0:
-                print("Reading response...")
+                #print("Reading response...")
                 self.byte_buffer += self.network.udt_receive()
 
             length = int(self.byte_buffer[:Packet.length_S_length])
+
 
             try:
                 responsePacket = Packet.from_byte_S(self.byte_buffer[0:length])
             except Exception as e:
                 print("Response packet corrupt")
                 continue
+            print("Successfully parsed packet")
+            #print()
+            #responsePacket.print_debug()
+            #print(responsePacket.isACK())
             
             if responsePacket.isACK():
                 #self.seq_num += 1
-                self.seq_num = (self.seq_num + 1) % 2
+                print("ACK Recieved!")
+                self.seq_num = (self.seq_num + 1)# % 2
                 break
 
             if responsePacket.isNAK():
@@ -227,12 +235,12 @@ class RDT:
 
                 #send ACK
                 ACK = Packet(self.seq_num, ACK=1)
-                print("ack packet: " + ACK.get_byte_S())
+                #print("ack packet: " + ACK.get_byte_S())
                 self.network.udt_send(ACK.get_byte_S())
-                print("ack sent after receiving")
+                #print("ack sent after receiving")
 
                 #increment sequence
-                self.seq_num = (self.seq_num + 1) % 2
+                self.seq_num = (self.seq_num + 1)# % 2
                 
 
             # not corrupt but old sequence
@@ -242,12 +250,9 @@ class RDT:
                 self.byte_buffer = self.byte_buffer[length:]
                 #send ACK
                 ACK = Packet(self.seq_num, ACK=1)
-                print("ack packet: " + ACK.get_byte_S())
+                #print("ack packet: " + ACK.get_byte_S())
                 self.network.udt_send(ACK.get_byte_S())
-                print("old sequence number, ack sent")
-            
-        
-    
+                #print("old sequence number, ack sent")
         
 
 if __name__ == '__main__':
