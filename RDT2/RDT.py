@@ -124,7 +124,7 @@ class RDT:
             # Get recienver response....
             # How do we do this?
             response = self.rdt_1_0_receive()
-            
+             
             if (Packet.corrupt(byte_S)):
                 continue
 
@@ -165,6 +165,8 @@ class RDT:
             p = Packet.from_byte_S(self.byte_buffer[0:length])
 
             if (Packet.corrupt(byte_S)):
+                #reset buffer to exit while loop
+                self.byte_buffer = self.byte_buffer[length:]
                 #Send NACK
                 nack = Packet(self.seq_num, 0)
                 self.network.udt_send(nack.get_byte_S())
@@ -187,6 +189,8 @@ class RDT:
 
             # not corrupt but old sequence
             elif (p.seq_num != self.seq_num):
+                #reset buffer to exit while loop
+                self.byte_buffer = self.byte_buffer[length:]
                 #send ACK
                 ack = Packet(self.seq_num, 1)
                 self.network.udt_send(ack.get_byte_S())
