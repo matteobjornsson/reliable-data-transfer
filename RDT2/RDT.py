@@ -11,7 +11,7 @@ class Packet:
     ## length of md5 checksum in hex
     checksum_length = 32 
 
-    # Length of ack-nak secrtion
+    # Length of ack-nak section
     ACK_NAK_length = 2
     
     ## initialize each packet with a sequence number and message    
@@ -45,12 +45,12 @@ class Packet:
         checksum_S = checksum.hexdigest()
         #compile into a string
 
-        #print("Length: " + length_S)
-        #print("Seq_num_S: " + seq_num_S)
-        #print("checksum_S: " + checksum_S)
-        #print("self.ACK: " + str(self.ACK))
-        #print("self.isNAK: " + str(self.NAK))
-        #print("self.msg_s: " + self.msg_S)
+        # print("Length: " + length_S)
+        # print("Seq_num_S: " + seq_num_S)
+        # print("checksum_S: " + checksum_S)
+        # print("self.ACK: " + str(self.ACK))
+        # print("self.isNAK: " + str(self.NAK))
+        # print("self.msg_s: " + self.msg_S)
         #print( length_S + seq_num_S + checksum_S + self.msg_S)
         return length_S + seq_num_S + checksum_S + str(self.ACK) + str(self.NAK) + self.msg_S
    
@@ -70,7 +70,7 @@ class Packet:
         #print(ack_nak_S)
         #print(msg_S)
         #print(str(length_S + seq_num_S + ack_nak_S + msg_S))
-        
+
         #compute the checksum locally
         checksum = hashlib.md5(str(length_S + seq_num_S + ack_nak_S + msg_S).encode('utf-8'))
         computed_checksum_S = checksum.hexdigest()
@@ -83,6 +83,19 @@ class Packet:
 
     def isNAK(self) -> bool:
         return self.NAK == 1
+
+    def print_debug(self):
+        # return "seq_num: " + str(self.seq_num) + "\n" + \
+        #        "msg_s: " + str(self.msg_S) + "\n" + \
+        #        "ACK: " + str(self.ACK) + "\n" + \
+        #        "NAK: " + str(self.NAK)
+        #print("Length: " + length_S)
+        #print("Seq_num_S: " + seq_num_S)
+        #print("checksum_S: " + checksum_S)
+        print("Seq_num_S: " + str(self.seq_num))
+        print("self.ACK: " + str(self.ACK))
+        print("self.isNAK: " + str(self.NAK))
+        print("self.msg_s: " + self.msg_S)
 
 
 # Should just put corruption checking in try catch block
@@ -138,80 +151,36 @@ class RDT:
     def rdt_2_1_send(self, msg_S):
 
         p = Packet(self.seq_num, msg_S)
+        #self.seq_num += 1
         print("*** " + msg_S + " sent and waiting for ACK ***")
 
 
         # Wait for ack or nak
+        print("Entering while")
         while True:
 
             self.network.udt_send(p.get_byte_S())
+            self.byte_buffer = ''
 
-            responsePacket = None
-            #ret_S = None
-            byte_S = self.network.udt_receive()
-            #self.byte_buffer += byte_S
-            self.byte_buffer = ""
+            while len(self.byte_buffer) == 0:
+                print("Reading response...")
+                self.byte_buffer += self.network.udt_receive()
 
-            #keep extracting packets - if reordered, could get more than one
-            while True:
-                #check if we have received enough bytes
-                if(len(self.byte_buffer) < Packet.length_S_length):
-                    #return ret_S #not enough bytes to read packet length
-                    break
-                #extract length of packet
-                length = int(self.byte_buffer[:Packet.length_S_length])
-                if len(self.byte_buffer) < length:
-                    #return ret_S #not enough bytes to read the whole packet
-                    break
-                #create packet from buffer content and add to return string
-                try:
-                    responsePacket = Packet.from_byte_S(self.byte_buffer[0:length])
-                except:
-                    break
-                #print("*************p = " + p)
-                #ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
-                #print("*************ret_S = "+ret_S)
-                #remove the packet bytes from the buffer
-                self.byte_buffer = self.byte_buffer[length:]
+            length = int(self.byte_buffer[:Packet.length_S_length])
 
-            if responsePacket is None:
+            try:
+                responsePacket = Packet.from_byte_S(self.byte_buffer[0:length])
+            except Exception as e:
+                print("Response packet corrupt")
                 continue
-
-            # Send is good, return
+            
             if responsePacket.isACK():
-                return
+                #self.seq_num += 1
+                self.seq_num = (self.seq_num + 1) % 2
+                break
 
             if responsePacket.isNAK():
                 continue
-
-
-
-
-
-            #print("i'm looping here")
-
-            # Get recienver response....
-            # How do we do this?
-
-            # while True: 
-            #     response = self.rdt_1_0_receive()
-            #     p = Packet.from_byte_S(response)
-
-            #     if (not response == None):
-            #         #print(str(response) + "!!!")
-            #         break
-
-            # if (response == "corrupt" or "NAK"):
-            #     continue
-
-            # # Check if ACK, then return
-            # elif (response == "ACK"):
-            #     print("ACK RECEIVED")
-
-            #     #Increment sequence when ACK received
-            #     self.seq_num = (self.seq_num + 1) % 2
-            #     break
-
 
     #############
     # TODO:
