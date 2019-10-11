@@ -123,7 +123,8 @@ class RDT:
 
             # Get recienver response....
             # How do we do this?
-            byte_S = self.network.udt_receive()
+            response = self.rdt_1_0_receive()
+            
             if (Packet.corrupt(byte_S)):
                 continue
 
