@@ -30,13 +30,13 @@ class Packet:
         ack = byte_S[Packet.seq_num_S_length + Packet.seq_num_S_length + Packet.checksum_length: Packet.seq_num_S_length + Packet.length_S_length + Packet.checksum_length + Packet.ACK_NAK_length - 1]
         nak = byte_S[Packet.seq_num_S_length + Packet.seq_num_S_length + Packet.checksum_length + Packet.ACK_NAK_length - 1: Packet.seq_num_S_length + Packet.length_S_length + Packet.checksum_length + Packet.ACK_NAK_length]
         msg_S = byte_S[Packet.length_S_length + Packet.seq_num_S_length + Packet.checksum_length + Packet.ACK_NAK_length:]
-        return self.__init__(seq_num, msg_S, ack, nak)
+        return self(seq_num, msg_S, ack, nak)
 
         
     def get_byte_S(self) -> str:
         #convert sequence number of a byte field of seq_num_S_length bytes
         seq_num_S = str(self.seq_num).zfill(self.seq_num_S_length)
-        print (seq_num_S)
+        #print (seq_num_S)
         #convert length to a byte field of length_S_length bytes
         length_S = str(self.length_S_length + len(seq_num_S) + self.checksum_length + self.ACK_NAK_length + len(self.msg_S)).zfill(self.length_S_length)
         #compute the checksum
@@ -238,14 +238,15 @@ class RDT:
             #send NAK if corrupt
             try:
                 p = Packet.from_byte_S(self.byte_buffer[0:length])
-            except:
+            except Exception as e:
+                print(e)
                 #reset buffer to exit while loop
                 self.byte_buffer = self.byte_buffer[length:]
                 #Send NACK
                 NAK = Packet(self.seq_num, NAK=1)
                 print("NAK packet: " + NAK.get_byte_S())
                 self.network.udt_send(NAK.get_byte_S())
-        
+                break
 
             # not corrupt, expected sequence number
             if (p.seq_num == self.seq_num):
