@@ -40,7 +40,7 @@ class Packet:
         #convert length to a byte field of length_S_length bytes
         length_S = str(self.length_S_length + len(seq_num_S) + self.checksum_length + self.ACK_NAK_length + len(self.msg_S)).zfill(self.length_S_length)
         #compute the checksum
-        print(length_S + seq_num_S + str(self.ACK) + str(self.NAK) + self.msg_S)
+        #print(length_S + seq_num_S + str(self.ACK) + str(self.NAK) + self.msg_S)
         checksum = hashlib.md5((length_S + seq_num_S + str(self.ACK) + str(self.NAK) + self.msg_S).encode('utf-8'))
         checksum_S = checksum.hexdigest()
         #compile into a string
@@ -138,7 +138,7 @@ class RDT:
     def rdt_2_1_send(self, msg_S):
 
         p = Packet(self.seq_num, msg_S)
-        print("***" + msg_S + " sent and waiting for ACK ***")
+        print("*** " + msg_S + " sent and waiting for ACK ***")
 
 
         # Wait for ack or nak
@@ -235,17 +235,20 @@ class RDT:
             if len(self.byte_buffer) < length:
                 return ret_S #not enough bytes to read the whole packet
             #create packet from buffer content and add to return string
-            p = Packet.from_byte_S(self.byte_buffer[0:length])
-
-            if (Packet.corrupt(byte_S)):
+            #send NAK if corrupt
+            try:
+                p = Packet.from_byte_S(self.byte_buffer[0:length])
+            except:
                 #reset buffer to exit while loop
                 self.byte_buffer = self.byte_buffer[length:]
                 #Send NACK
-                nack = Packet(self.seq_num, "NAK")
-                self.network.udt_send(nack.get_byte_S())
+                NAK = Packet(self.seq_num, NAK=1)
+                print("NAK packet: " + NAK.get_byte_S())
+                self.network.udt_send(NAK.get_byte_S())
+        
 
             # not corrupt, expected sequence number
-            elif (p.seq_num == self.seq_num):
+            if (p.seq_num == self.seq_num):
                 
                 #deliver data: 
                 ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
@@ -253,9 +256,9 @@ class RDT:
                 self.byte_buffer = self.byte_buffer[length:]
 
                 #send ACK
-                ack = Packet(self.seq_num, "ACK")
-                print("ack packet: " + ack.get_byte_S())
-                self.network.udt_send(ack.get_byte_S())
+                ACK = Packet(self.seq_num, ACK=1)
+                print("ack packet: " + ACK.get_byte_S())
+                self.network.udt_send(ACK.get_byte_S())
                 print("ack sent after receiving")
 
                 #increment sequence
@@ -268,8 +271,9 @@ class RDT:
                 ret_S = None
                 self.byte_buffer = self.byte_buffer[length:]
                 #send ACK
-                ack = Packet(self.seq_num, "ACK")
-                self.network.udt_send(ack.get_byte_S())
+                ACK = Packet(self.seq_num, ACK=1)
+                print("ack packet: " + ACK.get_byte_S())
+                self.network.udt_send(ACK.get_byte_S())
                 print("old sequence number, ack sent")
             
         
