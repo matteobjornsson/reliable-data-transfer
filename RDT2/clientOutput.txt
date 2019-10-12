@@ -1,0 +1,76 @@
+Network: role is client
+Converting: The use of COBOL cripples the mind; its teaching should, therefore, be regarded as a criminal offense. -- Edsgar Dijkstra
+*** seq num 1 sent from client: The use of COBOL cripples the mind; its teaching should, therefore, be regarded as a criminal offense. -- Edsgar Dijkstra and waiting for ACK ***
+
+Network: role is client
+Network: role is client
+Converting: The use of COBOL cripples the mind; its teaching should, therefore, be regarded as a criminal offense. -- Edsgar Dijkstra
+*** seq num 1 sent from client: The use of COBOL cripples the mind; its teaching should, therefore, be regarded as a criminal offense. -- Edsgar Dijkstra and waiting for ACK ***
+
+receiving byte buffer: 00000000540000000001ea9f3092fc4467bea296b04e8027f6a910
+packet 1 ACK'ed!
+ACK 00000000540000000001ea9f3092fc4467bea296b04e8027f6a910
+
+packet received
+packet number: 2
+packet matches expected seq number
+send ack packet: 000000005400000000026806949ea6b84601f6d16236d7728b9310
+client rdt seq number: 3
+*TO*: eThay useway of COBOLay ipplescray the ind;may itsway eachingtay ould,shay erefore,thay be egardedray as a iminalcray offense.way -- arEdsgay ijkstraDay.
+
+Converting: C makes it easy to shoot yourself in the foot; C++ makes it harder, but when you do, it blows away your whole leg. -- Bjarne Stroustrup
+*** seq num 3 sent from client: C makes it easy to shoot yourself in the foot; C++ makes it harder, but when you do, it blows away your whole leg. -- Bjarne Stroustrup and waiting for ACK ***
+
+receiving byte buffer: 00000000540000000003650c386be4581d369794bbe8fd10e8b410
+packet 3 ACK'ed!
+ACK 00000000540000000003650c386be4581d369794bbe8fd10e8b410
+
+packet received
+packet number: 4
+packet matches expected seq number
+send ack packet: 00000000540000000004611edc4a8ac7207f71597954417573d410
+client rdt seq number: 5
+*TO*: C akesmay it easyway to ootshay yourselfway in the oot;fay C++ay akesmay it arder,hay utbay enwhay youway o,day it owsblay awayway yourway olewhay eg.lay -- arneBjay oustrupStray.
+
+Converting: A mathematician is a device for turning coffee into theorems. -- Paul Erdos
+*** seq num 5 sent from client: A mathematician is a device for turning coffee into theorems. -- Paul Erdos and waiting for ACK ***
+
+receiving byte buffer: 000000005400000000059f81063cdcb275b565d2cdc9aef483ce10
+packet 5 ACK'ed!
+ACK 000000005400000000059f81063cdcb275b565d2cdc9aef483ce10
+
+packet received
+packet number: 6
+packet matches expected seq number
+send ack packet: 000000005400000000063c2a0a6f497a71f284057572cf7304a310
+client rdt seq number: 7
+*TO*: A athematicianmay is a eviceday orfay urningtay offeecay intoway eorems.thay -- aulPay osErday.
+
+Converting: Grove giveth and Gates taketh away. -- Bob Metcalfe (inventor of Ethernet) on the trend of hardware speedups not being able to keep up with software demands
+*** seq num 7 sent from client: Grove giveth and Gates taketh away. -- Bob Metcalfe (inventor of Ethernet) on the trend of hardware speedups not being able to keep up with software demands and waiting for ACK ***
+
+receiving byte buffer: 000000005400000000070c98d7c92497ce9330c1ff1a0f82015510
+packet 7 ACK'ed!
+ACK 000000005400000000070c98d7c92497ce9330c1ff1a0f82015510
+
+packet received
+packet number: 8
+packet matches expected seq number
+send ack packet: 000000005400000000081a84b450c97ad6bf66182d77a729d8c010
+client rdt seq number: 9
+*TO*: oveGray ivethgay andway atesGay akethtay away.way -- obBay etcalfeMay inventor(ay of ernet)Ethay on the endtray of ardwarehay eedupsspay otnay eingbay ableway to eepkay up ithway oftwaresay emandsday.
+
+Converting: Wise men make proverbs, but fools repeat them. -- Samuel Palmer (1805-80)
+*** seq num 9 sent from client: Wise men make proverbs, but fools repeat them. -- Samuel Palmer (1805-80) and waiting for ACK ***
+
+receiving byte buffer: 0000000054000000000933941c6bda9caeb294e307f2fe8af26610
+packet 9 ACK'ed!
+ACK 0000000054000000000933941c6bda9caeb294e307f2fe8af26610
+
+packet received
+packet number: 10
+packet matches expected seq number
+send ack packet: 00000000540000000010d9c0a33f54bb72a5849d02f765d0e28d10
+client rdt seq number: 11
+*TO*: iseWay enmay akemay overbs,pray utbay oolsfay epeatray em.thay -- amuelSay almerPay (1805-80)ay.
+

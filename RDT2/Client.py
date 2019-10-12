@@ -28,14 +28,17 @@ if __name__ == '__main__':
         while msg_S == None:
             msg_S = rdt.rdt_2_1_receive()
             if msg_S is None:
-                if time_of_last_data + timeout < time.time():
-                    break
-                else:
-                    continue
+                continue
+                # if time_of_last_data + timeout < time.time():
+                #     print("Client rdt receive timeout")
+                #     break
+                # else:
+                #     continue
         time_of_last_data = time.time()
         print("client rdt seq number: " + str(rdt.seq_num))
         #print the result
         if msg_S:
-            print('to: '+msg_S+'\n')
+            print('*TO*: '+msg_S+'\n')
+            time.sleep(1)
         
     rdt.disconnect()

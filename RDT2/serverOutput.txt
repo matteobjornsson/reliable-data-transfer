@@ -1,0 +1,74 @@
+Network: role is server
+timeout
+Network: role is server
+
+packet received
+packet number: 1
+packet matches expected seq number
+send ack packet: 00000000540000000001ea9f3092fc4467bea296b04e8027f6a910
+Converted The use of COBOL cripples the mind; its teaching should, therefore, be regarded as a criminal offense. -- Edsgar Dijkstra 
+to 
+eThay useway of COBOLay ipplescray the ind;may itsway eachingtay ould,shay erefore,thay be egardedray as a iminalcray offense.way -- arEdsgay ijkstraDay.
+
+*** seq num 2 sent from server: eThay useway of COBOLay ipplescray the ind;may itsway eachingtay ould,shay erefore,thay be egardedray as a iminalcray offense.way -- arEdsgay ijkstraDay. and waiting for ACK ***
+
+receiving byte buffer: 000000005400000000026806949ea6b84601f6d16236d7728b9310
+packet 2 ACK'ed!
+ACK 000000005400000000026806949ea6b84601f6d16236d7728b9310
+
+packet received
+packet number: 3
+packet matches expected seq number
+send ack packet: 00000000540000000003650c386be4581d369794bbe8fd10e8b410
+Converted C makes it easy to shoot yourself in the foot; C++ makes it harder, but when you do, it blows away your whole leg. -- Bjarne Stroustrup 
+to 
+C akesmay it easyway to ootshay yourselfway in the oot;fay C++ay akesmay it arder,hay utbay enwhay youway o,day it owsblay awayway yourway olewhay eg.lay -- arneBjay oustrupStray.
+
+*** seq num 4 sent from server: C akesmay it easyway to ootshay yourselfway in the oot;fay C++ay akesmay it arder,hay utbay enwhay youway o,day it owsblay awayway yourway olewhay eg.lay -- arneBjay oustrupStray. and waiting for ACK ***
+
+receiving byte buffer: 00000000540000000004611edc4a8ac7207f71597954417573d410
+packet 4 ACK'ed!
+ACK 00000000540000000004611edc4a8ac7207f71597954417573d410
+
+packet received
+packet number: 5
+packet matches expected seq number
+send ack packet: 000000005400000000059f81063cdcb275b565d2cdc9aef483ce10
+Converted A mathematician is a device for turning coffee into theorems. -- Paul Erdos 
+to 
+A athematicianmay is a eviceday orfay urningtay offeecay intoway eorems.thay -- aulPay osErday.
+
+*** seq num 6 sent from server: A athematicianmay is a eviceday orfay urningtay offeecay intoway eorems.thay -- aulPay osErday. and waiting for ACK ***
+
+receiving byte buffer: 000000005400000000063c2a0a6f497a71f284057572cf7304a310
+packet 6 ACK'ed!
+ACK 000000005400000000063c2a0a6f497a71f284057572cf7304a310
+
+packet received
+packet number: 7
+packet matches expected seq number
+send ack packet: 000000005400000000070c98d7c92497ce9330c1ff1a0f82015510
+Converted Grove giveth and Gates taketh away. -- Bob Metcalfe (inventor of Ethernet) on the trend of hardware speedups not being able to keep up with software demands 
+to 
+oveGray ivethgay andway atesGay akethtay away.way -- obBay etcalfeMay inventor(ay of ernet)Ethay on the endtray of ardwarehay eedupsspay otnay eingbay ableway to eepkay up ithway oftwaresay emandsday.
+
+*** seq num 8 sent from server: oveGray ivethgay andway atesGay akethtay away.way -- obBay etcalfeMay inventor(ay of ernet)Ethay on the endtray of ardwarehay eedupsspay otnay eingbay ableway to eepkay up ithway oftwaresay emandsday. and waiting for ACK ***
+
+receiving byte buffer: 000000005400000000081a84b450c97ad6bf66182d77a729d8c010
+packet 8 ACK'ed!
+ACK 000000005400000000081a84b450c97ad6bf66182d77a729d8c010
+
+packet received
+packet number: 9
+packet matches expected seq number
+send ack packet: 0000000054000000000933941c6bda9caeb294e307f2fe8af26610
+Converted Wise men make proverbs, but fools repeat them. -- Samuel Palmer (1805-80) 
+to 
+iseWay enmay akemay overbs,pray utbay oolsfay epeatray em.thay -- amuelSay almerPay (1805-80)ay.
+
+*** seq num 10 sent from server: iseWay enmay akemay overbs,pray utbay oolsfay epeatray em.thay -- amuelSay almerPay (1805-80)ay. and waiting for ACK ***
+
+receiving byte buffer: 00000000540000000010d9c0a33f54bb72a5849d02f765d0e28d10
+packet 10 ACK'ed!
+ACK 00000000540000000010d9c0a33f54bb72a5849d02f765d0e28d10
+timeout
